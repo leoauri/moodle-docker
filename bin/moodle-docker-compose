@@ -1,6 +1,22 @@
 #!/usr/bin/env bash
 set -e
 
+# Nasty portable way to the directory of this script, following symlink,
+# because readlink -f not on OSX. Thanks stack overflow..
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+basedir="$( cd -P "$( dirname "$SOURCE" )/../" && pwd )"
+export ASSETDIR="${basedir}/assets"
+
+if [ -f "${basedir}/.env" ];
+then
+  . "${basedir}/.env"
+fi
+
 if [ ! -d "$MOODLE_DOCKER_WWWROOT" ];
 then
     echo 'Error: $MOODLE_DOCKER_WWWROOT is not set or not an existing directory'
@@ -13,18 +29,6 @@ then
     exit 1
 fi
 
-# Nasty portable way to the directory of this script, following symlink,
-# because readlink -f not on OSX. Thanks stack overflow..
-SOURCE="${BASH_SOURCE[0]}"
-while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
-  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-  SOURCE="$(readlink "$SOURCE")"
-  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-done
-basedir="$( cd -P "$( dirname "$SOURCE" )/../" && pwd )"
-export ASSETDIR="${basedir}/assets"
-
-
 dockercompose="docker-compose -f ${basedir}/base.yml"
 dockercompose="${dockercompose} -f ${basedir}/service.mail.yml"
 
@@ -35,7 +39,6 @@ export MOODLE_DOCKER_PHP_VERSION=${MOODLE_DOCKER_PHP_VERSION:-7.1}
 if [ "$MOODLE_DOCKER_DB" != 'pgsql' ];
 then
     dockercompose="${dockercompose} -f ${basedir}/db.${MOODLE_DOCKER_DB}.yml"
-
 fi
 
 # Support PHP version overrides for DB..
@@ -74,12 +77,10 @@ then
     dockercompose="${dockercompose} -f ${basedir}/webserver.port.yml"
 fi
 
-
 # Mac OS Compatbility
 if [[ "$(uname)" == "Darwin" ]]; then
     # Support https://docs.docker.com/docker-for-mac/osxfs-caching/
     dockercompose="${dockercompose} -f ${basedir}/volumes-cached.yml"
 fi
-
 
 $dockercompose $@
