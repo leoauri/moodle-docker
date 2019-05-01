@@ -1,7 +1,11 @@
 version: "2"
 services:
   webserver:
-    image: "moodlehq/moodle-php-apache:${MOODLE_DOCKER_PHP_VERSION}"
+    build:
+      context: "${ASSETDIR}/dockerfiles"
+      dockerfile: Dockerfile-moodle-deploy
+      args:
+        MOODLE_DOCKER_PHP_VERSION: "${MOODLE_DOCKER_PHP_VERSION}"
     depends_on:
       - db
     volumes:
