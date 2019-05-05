@@ -11,18 +11,14 @@ services:
       MOODLE_DOCKER_DBTYPE: pgsql
       MOODLE_DOCKER_DBNAME: moodle
       MOODLE_DOCKER_DBUSER: moodle
-      MOODLE_DOCKER_DBPASS: "m@0dl3ing"
-      MOODLE_DOCKER_BROWSER: firefox
+      MOODLE_DOCKER_DBPASS: "${MOODLE_DOCKER_DBPASS}"
       MOODLE_DOCKER_WEB_HOST: "${MOODLE_DOCKER_WEB_HOST}"
+      MOODLE_DOCKER_WEB_PORT: "${MOODLE_DOCKER_WEB_PORT}"
+    ports:
+      - "${MOODLE_DOCKER_WEB_PORT}:80"
   db:
     image: postgres:9.6.7
     environment:
       POSTGRES_USER: moodle
-      POSTGRES_PASSWORD: "m@0dl3ing"
+      POSTGRES_PASSWORD: "${MOODLE_DOCKER_DBPASS}"
       POSTGRES_DB: moodle
-  exttests:
-    image: moodlehq/moodle-exttests
-  selenium:
-    image: "selenium/standalone-firefox${MOODLE_DOCKER_SELENIUM_SUFFIX}:2.53.1"
-    volumes:
-      - "${MOODLE_DOCKER_WWWROOT}:/var/www/html:ro"

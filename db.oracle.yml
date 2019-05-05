@@ -1,8 +1,0 @@
-version: "2"
-services:
-  webserver:
-    environment:
-      MOODLE_DOCKER_DBTYPE: oci
-      MOODLE_DOCKER_DBNAME: XE
-  db:
-    image: moodlehq/moodle-db-oracle
