@@ -1,3 +1,16 @@
 ARG MOODLE_DOCKER_PHP_VERSION
 
 FROM moodlehq/moodle-php-apache:$MOODLE_DOCKER_PHP_VERSION
+
+# install cron
+RUN apt-get update && \
+    apt-get --assume-yes install cron && \
+    touch /var/log/cron.log && \
+    chown www-data /var/log/cron.log
+
+# mount crontab and init script which passes env vars to cron
+COPY moodle_cron /etc/cron.d/moodle
+COPY foreground.sh /usr/local/foreground.sh
+RUN chmod +x /usr/local/foreground.sh
+
+CMD ["/usr/local/foreground.sh"]

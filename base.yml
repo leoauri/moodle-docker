@@ -2,8 +2,8 @@ version: "2"
 services:
   webserver:
     build:
-      context: "${ASSETDIR}/dockerfiles"
-      dockerfile: Dockerfile-moodle-deploy
+      context: "${ASSETDIR}"
+      dockerfile: "${ASSETDIR}/dockerfiles/Dockerfile-moodle-deploy"
       args:
         MOODLE_DOCKER_PHP_VERSION: "${MOODLE_DOCKER_PHP_VERSION}"
     depends_on:
