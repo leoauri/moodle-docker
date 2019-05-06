@@ -13,4 +13,9 @@ COPY moodle_cron /etc/cron.d/moodle
 COPY foreground.sh /usr/local/foreground.sh
 RUN chmod +x /usr/local/foreground.sh
 
+# install letsencrypt certbot
+COPY apt_sources_backports /etc/apt/sources.list.d/backports.list
+RUN apt-get update && apt-get --assume-yes install certbot python-certbot-apache -t stretch-backports
+
+
 CMD ["/usr/local/foreground.sh"]
