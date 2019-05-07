@@ -49,4 +49,14 @@ then
     dockercompose="${dockercompose} -f ${basedir}/service.mail.yml"
 fi
 
+if [ "$1" = "down" ]; then
+  echo "This will destroy your containers! Continue? (type \"yes\")"
+  read confirmation
+  if [ "$confirmation" != "yes" ]; then
+    echo "Operation aborted"
+    exit 1
+  fi
+fi
+
+
 $dockercompose $@
