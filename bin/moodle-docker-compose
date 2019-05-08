@@ -38,9 +38,6 @@ fi
 # PHP Version.
 export MOODLE_DOCKER_PHP_VERSION=${MOODLE_DOCKER_PHP_VERSION:-7.1}
 
-# Webserver port
-export MOODLE_DOCKER_WEB_PORT=${MOODLE_DOCKER_WEB_PORT:-80}
-
 dockercompose="docker-compose -f ${basedir}/base.yml"
 
 # Load mailhog if no SMTP host set

@@ -13,11 +13,10 @@ services:
       - "${ASSETDIR}/web/apache2_faildumps.conf:/etc/apache2/conf-enabled/apache2_faildumps.conf"
     environment:
       MOODLE_DOCKER_DBTYPE: pgsql
-      MOODLE_DOCKER_DBNAME: moodle
       MOODLE_DOCKER_DBUSER: moodle
+      MOODLE_DOCKER_DBNAME: moodle
       MOODLE_DOCKER_DBPASS: "${MOODLE_DOCKER_DBPASS}"
       MOODLE_DOCKER_WEB_HOST: "${MOODLE_DOCKER_WEB_HOST}"
-      MOODLE_DOCKER_WEB_PORT: "${MOODLE_DOCKER_WEB_PORT}"
       MOODLE_DOCKER_SMTP_HOST: "${MOODLE_DOCKER_SMTP_HOST}"
       MOODLE_DOCKER_SMTP_SECURITY: "${MOODLE_DOCKER_SMTP_SECURITY}"
       MOODLE_DOCKER_SMTP_AUTHTYPE: "${MOODLE_DOCKER_SMTP_AUTHTYPE}"
@@ -32,5 +31,5 @@ services:
     image: postgres:9.6.7
     environment:
       POSTGRES_USER: moodle
-      POSTGRES_PASSWORD: "${MOODLE_DOCKER_DBPASS}"
       POSTGRES_DB: moodle
+      POSTGRES_PASSWORD: "${MOODLE_DOCKER_DBPASS}"
