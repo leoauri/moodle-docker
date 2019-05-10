@@ -10,4 +10,8 @@ if [ "$MOODLE_DOCKER_SSL" = true ]; then
         -d "$MOODLE_DOCKER_WEB_HOST" -m "$MOODLE_DOCKER_ADMIN_EMAIL"
 fi
 
+if ! [ "$MOODLE_DOCKER_DEV_MODE" = true ]; then
+    echo 'display_errors = Off' > /usr/local/etc/php/php.ini
+fi
+
 apache2-foreground
