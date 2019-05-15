@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -e
+
+DATE=`date +%Y%m%d%H%M%S`
+mkdir -p ~/backups/$DATE
+docker exec moodle_db pg_dump -c -U moodle moodle > ~/backups/$DATE/db_backup.sql
+docker cp -a moodle_webserver:/var/www/moodledata ~/backups/$DATE/moodledata
+
+# Remove temp directories
+REMOVEDIRS=( cache localcache sessions temp trashdir )
+for REMOVEDIR in "${REMOVEDIRS[@]}"
+do
+    if [ -d ~/backups/$DATE/moodledata/$REMOVEDIR ]; then
+        rm -r ~/backups/$DATE/moodledata/$REMOVEDIR
+    fi
+done

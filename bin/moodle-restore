@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -e
+
+if [ ! "$#" -eq 1 ] || [ ! -d "$1" ] || [ ! -d "$1/moodledata" ] || [ ! -f "$1/db_backup.sql" ]; then
+    cat <<- EOF
+Provide one parameter, a directory to restore from.  
+This directory should contain a pgsql dump named db_backup.sql and 
+a moodledata directory to copy into the container.
+EOF
+    exit 1
+fi
+
+# This will overwrite all data in your containers! Are you sure?
+echo "This overwrite all data in your containers! Continue? (type \"yes\")"
+read confirmation
+if [ "$confirmation" != "yes" ]; then
+    echo "Operation aborted"
+    exit 1
+fi
+
+# Apply sql file: restore database
+cat "$1/db_backup.sql" | docker exec -i moodle_db psql -U moodle 2>&1 >/dev/null
+
+# Remove data directory and copy backup in
+docker exec moodle_webserver rm -rf /var/www/moodledata && \
+    docker cp -a "$1/moodledata" moodle_webserver:/var/www/moodledata && \
+    docker exec moodle_webserver chown www-data /var/www/moodledata
