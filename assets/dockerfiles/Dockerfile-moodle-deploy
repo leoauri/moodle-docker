@@ -17,5 +17,6 @@ RUN chmod +x /usr/local/foreground.sh
 COPY apt_sources_backports /etc/apt/sources.list.d/backports.list
 RUN apt-get update && apt-get --assume-yes install certbot python-certbot-apache -t stretch-backports
 
+COPY php.ini /usr/local/etc/php/php.ini
 
 CMD ["/usr/local/foreground.sh"]

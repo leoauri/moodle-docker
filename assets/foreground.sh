@@ -11,7 +11,7 @@ if [ "$MOODLE_DOCKER_SSL" = true ]; then
 fi
 
 if ! [ "$MOODLE_DOCKER_DEV_MODE" = true ]; then
-    echo 'display_errors = Off' > /usr/local/etc/php/php.ini
+    echo 'display_errors = Off' >> /usr/local/etc/php/php.ini
 fi
 
 apache2-foreground
