@@ -46,6 +46,13 @@ then
     dockercompose="${dockercompose} -f ${basedir}/service.mail.yml"
 fi
 
+# load dev_mode settings if DEV_MODE flag is set
+if [ "$MOODLE_DOCKER_DEV_MODE" = "true" ];
+then
+  dockercompose="${dockercompose} -f ${basedir}/dev_mode.yml"
+fi
+
+
 if [ "$1" = "down" ]; then
   echo "This will destroy your containers! Continue? (type \"yes\")"
   read confirmation
