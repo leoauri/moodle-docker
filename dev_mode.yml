@@ -3,6 +3,7 @@ services:
   webserver:
     environment:
       MOODLE_DOCKER_BROWSER: firefox
+      MOODLE_DOCKER_XDEBUG_KEY:
   exttests:
     image: moodlehq/moodle-exttests
   selenium:
