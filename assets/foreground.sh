@@ -1,8 +1,8 @@
 #!/bin/bash
 
-echo 'You hear me'
+echo 'Starting foreground process'
 
-if [ "$MOODLE_DOCKER_XDEBUG_KEY" ]; then
+if [ "$XDEBUG_CONFIG" ]; then
     pecl install xdebug && \
         echo 'zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20160303/xdebug.so' \
         >> /usr/local/etc/php/php.ini

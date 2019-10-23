@@ -62,6 +62,13 @@ then
   dockercompose="${dockercompose} -f ${basedir}/dev_mode.yml"
 fi
 
+# if xdebug key is set, setup the config variable, otherwise set an empty string
+if [ "$MOODLE_DOCKER_XDEBUG_KEY" ]; then
+    export XDEBUG_CONFIG="idekey=${MOODLE_DOCKER_XDEBUG_KEY}"
+else
+    export XDEBUG_CONFIG=""
+fi
+
 
 if [ "$1" = "down" ]; then
   echo "This will destroy your containers! Continue? (type \"yes\")"
