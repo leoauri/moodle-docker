@@ -19,20 +19,20 @@ fi
 
 if [ ! -d "$MOODLE_DOCKER_WWWROOT" ];
 then
-    echo 'Error: $MOODLE_DOCKER_WWWROOT is not set or not an existing directory'
-    exit 1
+  echo 'Error: $MOODLE_DOCKER_WWWROOT is not set or not an existing directory'
+  exit 1
 fi
 
 if [ ! -n "$MOODLE_DOCKER_DBPASS" ];
 then
-    echo 'Error: $MOODLE_DOCKER_DBPASS is not set'
-    exit 1
+  echo 'Error: $MOODLE_DOCKER_DBPASS is not set'
+  exit 1
 fi
 
 if [ ! -n "$MOODLE_DOCKER_WEB_HOST" ];
 then
-    echo 'Error: $MOODLE_DOCKER_WEB_HOST is not set'
-    exit 1
+  echo 'Error: $MOODLE_DOCKER_WEB_HOST is not set'
+  exit 1
 fi
 
 # Set unset variables to empty strings to quieten Docker errors
@@ -41,9 +41,21 @@ export MOODLE_DOCKER_SMTP_SECURITY=${MOODLE_DOCKER_SMTP_SECURITY:-}
 export MOODLE_DOCKER_SMTP_AUTHTYPE=${MOODLE_DOCKER_SMTP_AUTHTYPE:-}
 export MOODLE_DOCKER_SMTP_USER=${MOODLE_DOCKER_SMTP_USER:-}
 export MOODLE_DOCKER_SMTP_PASS=${MOODLE_DOCKER_SMTP_PASS:-}
-export MOODLE_DOCKER_ADMIN_EMAIL=${MOODLE_DOCKER_ADMIN_EMAIL:-}
-export MOODLE_DOCKER_SSL=${MOODLE_DOCKER_SSL:-}
 export MOODLE_DOCKER_SELENIUM_SUFFIX=${MOODLE_DOCKER_SELENIUM_SUFFIX:-}
+export MOODLE_DOCKER_DEV_MODE=${MOODLE_DOCKER_DEV_MODE:-}
+
+# if we are starting SSL mode, check that an admin email has been set
+export MOODLE_DOCKER_SSL=${MOODLE_DOCKER_SSL:-}
+if [ "$MOODLE_DOCKER_SSL" = "true" ];
+then
+  if [ -z "$MOODLE_DOCKER_ADMIN_EMAIL" ];
+  then
+    echo 'Error: $MOODLE_DOCKER_ADMIN_EMAIL must be set in SSL mode'
+    exit 1
+  fi
+fi
+
+export MOODLE_DOCKER_ADMIN_EMAIL=${MOODLE_DOCKER_ADMIN_EMAIL:-}
 
 # PHP Version.
 export MOODLE_DOCKER_PHP_VERSION=${MOODLE_DOCKER_PHP_VERSION:-7.1}
@@ -53,7 +65,7 @@ dockercompose="docker-compose -f ${basedir}/base.yml"
 # Load mailhog if no SMTP host set
 if [ ! -n "$MOODLE_DOCKER_SMTP_HOST" ];
 then
-    dockercompose="${dockercompose} -f ${basedir}/service.mail.yml"
+  dockercompose="${dockercompose} -f ${basedir}/service.mail.yml"
 fi
 
 # load dev_mode settings if DEV_MODE flag is set
@@ -61,6 +73,10 @@ if [ "$MOODLE_DOCKER_DEV_MODE" = "true" ];
 then
   dockercompose="${dockercompose} -f ${basedir}/dev_mode.yml"
 fi
+
+export PERSISTENTDIR="${basedir}/persistent"
+# Create directory for persistent files if not present
+mkdir -p "${PERSISTENTDIR}"
 
 
 if [ "$1" = "down" ]; then

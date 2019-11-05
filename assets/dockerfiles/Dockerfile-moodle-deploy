@@ -2,9 +2,9 @@ ARG MOODLE_DOCKER_PHP_VERSION
 
 FROM moodlehq/moodle-php-apache:$MOODLE_DOCKER_PHP_VERSION
 
-# install cron
+# install cron and netstat
 RUN apt-get update && \
-    apt-get --assume-yes install cron && \
+    apt-get --assume-yes install cron net-tools && \
     touch /var/log/cron.log && \
     chown www-data /var/log/cron.log
 
