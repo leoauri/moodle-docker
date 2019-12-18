@@ -2,10 +2,11 @@ version: "2"
 services:
   webserver:
     environment:
-      MOODLE_DOCKER_BROWSER: firefox
+      MOODLE_DOCKER_BROWSER: "${MOODLE_DOCKER_BROWSER}"
   exttests:
     image: moodlehq/moodle-exttests
   selenium:
     image: "selenium/standalone-firefox${MOODLE_DOCKER_SELENIUM_SUFFIX}:2.53.1"
     volumes:
       - "${MOODLE_DOCKER_WWWROOT}:/var/www/html:ro"
+      - /dev/shm:/dev/shm

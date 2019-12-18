@@ -71,7 +71,13 @@ fi
 # load dev_mode settings if DEV_MODE flag is set
 if [ "$MOODLE_DOCKER_DEV_MODE" = "true" ];
 then
+  export MOODLE_DOCKER_BROWSER=${MOODLE_DOCKER_BROWSER:-firefox}
   dockercompose="${dockercompose} -f ${basedir}/dev_mode.yml"
+  # override selenium image if MOODLE_DOCKER_BROWSER is chrome
+  if [ "$MOODLE_DOCKER_BROWSER" = "chrome" ];
+  then
+    dockercompose="${dockercompose} -f ${basedir}/selenium.chrome.yml"
+  fi
 fi
 
 export PERSISTENTDIR="${basedir}/persistent"
