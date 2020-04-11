@@ -62,8 +62,15 @@ export MOODLE_DOCKER_PHP_VERSION=${MOODLE_DOCKER_PHP_VERSION:-7.1}
 
 dockercompose="docker-compose -f ${basedir}/base.yml"
 
-# Load mailhog if no SMTP host set
-if [ ! -n "$MOODLE_DOCKER_SMTP_HOST" ];
+# Load postfix mta if set
+if [ "$MOODLE_DOCKER_SMTP_HOST" = "postfix" ];
+then
+  dockercompose="${dockercompose} -f ${basedir}/smtp_relay.yml"
+  export MOODLE_DOCKER_SMTP_HOST="postfix:25"
+
+
+# else load mailhog if no SMTP host set
+elif [ ! -n "$MOODLE_DOCKER_SMTP_HOST" ];
 then
   dockercompose="${dockercompose} -f ${basedir}/service.mail.yml"
 fi
