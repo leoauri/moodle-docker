@@ -1,4 +1,9 @@
 version: "2"
+volumes:
+  postgres_data:
+    driver: local
+  moodle_data:
+    driver: local
 services:
   webserver:
     build:
@@ -11,6 +16,7 @@ services:
     volumes:
       - "${MOODLE_DOCKER_WWWROOT}:/var/www/html"
       - "${PERSISTENTDIR}/letsencrypt:/etc/letsencrypt"
+      - "moodle_data:/var/www/moodledata"
       - "${ASSETDIR}/web/apache2_faildumps.conf:/etc/apache2/conf-enabled/apache2_faildumps.conf"
     environment:
       MOODLE_DOCKER_DBTYPE: pgsql
@@ -37,3 +43,5 @@ services:
       POSTGRES_DB: moodle
       POSTGRES_PASSWORD: "${MOODLE_DOCKER_DBPASS}"
     container_name: moodle_db
+    volumes: 
+      - "postgres_data:/var/lib/postgresql/data"

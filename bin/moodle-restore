@@ -22,6 +22,6 @@ fi
 cat "$1/db_backup.sql" | docker exec -i moodle_db psql -U moodle 2>&1 >/dev/null
 
 # Remove data directory and copy backup in
-docker exec moodle_webserver rm -rf /var/www/moodledata && \
+docker exec moodle_webserver rm -rf /var/www/moodledata/* && \
     docker cp -a "$1/moodledata" moodle_webserver:/var/www/moodledata && \
     docker exec moodle_webserver chown www-data /var/www/moodledata
